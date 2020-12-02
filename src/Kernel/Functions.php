@@ -171,10 +171,11 @@ if (!function_exists('di')) {
     }
 }
 
-if (!function_exists('money_format')) {
-    function money_format($num, $scale = 2)
+if (!function_exists('format_money')) {
+    function format_money($num, $scale = 2)
     {
-        return sprintf("%.{$scale}f", substr(sprintf("%.{($scale + 1)}f", $num), 0, 0 - $scale));
+        $scale = pow(10, $scale);
+        return floor($num * $scale) / $scale;
     }
 }
 
