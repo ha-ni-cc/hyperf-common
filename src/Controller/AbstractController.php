@@ -74,7 +74,7 @@ abstract class AbstractController
         $info = $this->request->getAttribute('jwtInfo');
         if (empty($info)) throw new JwtException('Forgot to use middleware cause jwtInfo empty', 401);
         if ($key == '') return $info;
-        return $info[$key] ?? null;
+        return $info[$key] ?? throw new JwtException("JwtInfo [{$key}] not exist", 401);
     }
 
     /**
