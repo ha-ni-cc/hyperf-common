@@ -32,7 +32,8 @@ class DbTransactionException extends ServerException
         } else {
             $code = ErrorCode::SERVER_ERROR;
             $message = isDebug() ? $e->getMessage() : ErrorCode::getMessage($code);
-            LogUtil::get()->error('DbTransactionException', ['errMsg' => $e->getMessage(), 'errTrace' => $e->getTrace()]);
+            LogUtil::get()->error(__CLASS__, ['errMsg' => $e->getMessage(), 'errTrace' => $e->getTrace()]);
+            LogUtil::stdout()->error(__CLASS__ . " {$e->getMessage()} {$e->getTraceAsString()}");
         }
         parent::__construct($message, (int)$code);
     }
