@@ -155,6 +155,59 @@ function hideString($string, $start = 0, $length = 0, $re = '*')
     return implode('', $strArr);
 }
 
+/**
+ * 清除html标签
+ */
+function clearTags($str)
+{
+    $str = strip_tags($str);
+    //首先去掉头尾空格
+    $str = trim($str);
+    $str = preg_replace("/(\s|\&nbsp\;|　|\xc2\xa0)/", "", strip_tags($str));
+    //接着去掉两个空格以上的
+    $str = preg_replace('/\s(?=\s)/', '', $str);
+    //最后将非空格替换为一个空格
+    $str = preg_replace('/[\n\r\t]/', ' ', $str);
+    return $str;
+}
+
+/**
+ * 获取已经过了多久
+ * PHP时间转换
+ * 刚刚、几分钟前、几小时前
+ * 今天昨天前天几天前
+ * @param int $timestamp 时间戳
+ * @return string
+ */
+function getLastTime(int $timestamp)
+{
+    // 今天最大时间
+    $todayLast = strtotime(date('Y-m-d 23:59:59'));
+    $agoTimeTrue = time() - $timestamp;
+    $agoTime = $todayLast - $timestamp;
+    $agoDay = floor($agoTime / 86400);
+
+    if ($agoTimeTrue < 60) {
+        $result = '刚刚';
+    } elseif ($agoTimeTrue < 3600) {
+        $result = (ceil($agoTimeTrue / 60)) . '分钟前';
+    } elseif ($agoTimeTrue < 3600 * 12) {
+        $result = (ceil($agoTimeTrue / 3600)) . '小时前';
+    } elseif ($agoDay == 0) {
+        $result = '今天 ' . date('H:i', $timestamp);
+    } elseif ($agoDay == 1) {
+        $result = '昨天 ' . date('H:i', $timestamp);
+    } elseif ($agoDay == 2) {
+        $result = '前天 ' . date('H:i', $timestamp);
+    } elseif ($agoDay > 2 && $agoDay < 16) {
+        $result = $agoDay . '天前 ' . date('H:i', $timestamp);
+    } else {
+        $format = date('Y') != date('Y', $timestamp) ? "Y-m-d H:i" : "m-d H:i";
+        $result = date($format, $timestamp);
+    }
+    return $result;
+}
+
 if (!function_exists('di')) {
     /**
      * Finds an entry of the container by its identifier and returns it.
