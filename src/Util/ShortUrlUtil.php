@@ -39,7 +39,7 @@ class ShortUrlUtil
         $dec = 0;
         $len = strlen($b64);
         for ($i = 0; $i < $len; $i++) {
-            $b = $map[$b64{$i}];
+            $b = $map[$b64[$i]];
             if ($b === null) {
                 return false;
             }
